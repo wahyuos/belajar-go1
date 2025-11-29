@@ -1,0 +1,15 @@
+myblog/
+├── cmd/
+│   └── main.go           # Entry point
+├── internal/
+│   ├── dto/              # Data Transfer Objects (Request/Response)
+│   ├── entity/           # Database Models
+│   ├── handler/          # HTTP Handlers (Controller)
+│   ├── repository/       # Database access
+│   └── service/          # Business logic
+├── pkg/
+│   ├── database/         # Config DB
+│   ├── response/         # Response Wrapper
+│   └── utils/            # Utilities (Pagination, etc)
+├── .env                  # Environment Variables
+└── go.mod

@@ -1,0 +1,48 @@
+# -------------------------------------
+# 1. DEPENDENSI DAN MODUL
+# -------------------------------------
+# Vendor directory (jika Anda menggunakan vendoring)
+vendor/
+
+# -------------------------------------
+# 2. OUTPUT KOMPILASI DAN EXECUTABLE
+# -------------------------------------
+# File binary yang dikompilasi (executable)
+*.exe
+*.dll
+*.so
+# Nama executable dari folder cmd/main.go
+main
+/bin/*
+/build/*
+
+# -------------------------------------
+# 3. KONFIGURASI DAN RAHASIA (SENSITIF)
+# -------------------------------------
+# FILE ENVIRONMENT (WAJIB DIHINDARI!)
+.env 
+.env.*
+# File konfigurasi yang mungkin menyimpan kredensial
+config.yml
+config.yaml
+
+# -------------------------------------
+# 4. TESTING DAN LOGGING
+# -------------------------------------
+# Output testing
+*.test
+*.out
+/log/
+*.log
+
+# -------------------------------------
+# 5. IDE/OS SPESIFIK
+# -------------------------------------
+# macOS
+.DS_Store
+
+# Visual Studio Code
+.vscode/
+
+# IntelliJ / GoLand
+.idea/
