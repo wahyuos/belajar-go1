@@ -26,7 +26,7 @@ func GenerateToken(userID string) (string, error) {
 	claims := AuthClaims{
 		UserID: userID,
 		StandardClaims: jwt.StandardClaims{
-			ExpiresAt: jwt.At(time.Now().Add(time.Hour * 24)), // Token berlaku 24 jam
+			ExpiresAt: jwt.At(time.Now().Add(time.Hour * 1)), // Token berlaku 24 jam
 			IssuedAt:  jwt.At(time.Now()),
 		},
 	}
