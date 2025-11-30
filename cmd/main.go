@@ -8,7 +8,9 @@ import (
 	"bejalar-dasar/pkg/config"
 	"bejalar-dasar/pkg/database"
 	"bejalar-dasar/pkg/middleware"
+	"bejalar-dasar/pkg/response"
 	"log"
+	"net/http"
 	"os"
 
 	"github.com/gin-gonic/gin"
@@ -93,8 +95,18 @@ func main() {
 	// jika dev
 	r := gin.Default()
 
+	// index
+	r.GET("/", func (ctx *gin.Context)  {
+		response.Success(ctx, http.StatusOK, "Welcome", nil)
+	})
+
 	api := r.Group("/api/v1")
 	{
+		// health
+		api.GET("/health", func (ctx *gin.Context)  {
+			response.Success(ctx, http.StatusOK, "Everything ok", nil)
+		})
+
 		// RUTE AUTHENTIKASI (TIDAK PERLU MIDDLEWARE)
         api.POST("/auth/login", authHandler.Login)
 
