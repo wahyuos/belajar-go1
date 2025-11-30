@@ -1,0 +1,11 @@
+# File konfigurasi rahasia
+.env
+
+# Output Go
+*.exe
+*.test
+/bin/
+/build/
+
+# Cache dan Dependency
+vendor/
