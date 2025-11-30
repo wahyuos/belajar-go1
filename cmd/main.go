@@ -5,6 +5,7 @@ import (
 	"bejalar-dasar/internal/model"
 	"bejalar-dasar/internal/repository"
 	"bejalar-dasar/internal/service"
+	"bejalar-dasar/pkg/config"
 	"bejalar-dasar/pkg/database"
 	"bejalar-dasar/pkg/middleware"
 	"log"
@@ -72,9 +73,22 @@ func main() {
 	// dengan pola yang sama persis seperti Category di atas.
 
 	// 5. Setup Router
-	// jika production
-	// gin.SetMode(gin.ReleaseMode) 
-	// r := gin.New()
+	// Muat Konfigurasi
+    cfg, err := config.GinMode()
+    if err != nil {
+        log.Fatalf("Failed to load GinMode configuration: %v", err)
+    }
+
+    // Terapkan Gin Mode berdasarkan Konfigurasi (.env)
+    // gin.SetMode(gin.ReleaseMode) atau gin.SetMode(gin.DebugMode)
+    if cfg.GinMode == gin.ReleaseMode {
+        gin.SetMode(gin.ReleaseMode)
+        log.Println("RELEASE mode.")
+    } else {
+        // Default ke Debug jika tidak diatur atau nilainya bukan 'release'
+        gin.SetMode(gin.DebugMode)
+        log.Println("DEBUG mode (default).")
+    }
 	
 	// jika dev
 	r := gin.Default()
