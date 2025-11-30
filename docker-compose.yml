@@ -1,0 +1,32 @@
+services:
+  # 1. SERVICE APLIKASI GO (BACKEND)
+  blog:
+    # 1. Instruksikan Docker Compose untuk membangun image dari Dockerfile di direktori saat ini
+    build: . 
+
+    # 2. Beri nama image yang dihasilkan
+    image: myblog-api:latest 
+    
+    # Memetakan port host
+    ports:
+      - "8086:8080"
+      
+    # 3. Agar container bisa terhubung ke database di host lokal Anda
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+      
+    # 4. Environment variables yang dibutuhkan aplikasi Go
+    environment:
+      # Ganti dengan detail koneksi DB lokal Anda
+      - DB_HOST=host.docker.internal 
+      - DB_PORT=3366 # Sesuaikan dengan port DB lokal Anda
+      - DB_USER=root
+      - DB_PASSWORD=
+      - DB_NAME=belajargo1
+      
+      # Variable aplikasi
+      - GIN_MODE=debug 
+      - JWT_SECRET=jwt_rahasia
+    
+    # Agar container restart otomatis jika terjadi crash
+    restart: unless-stopped
