@@ -28,5 +28,9 @@ services:
       - GIN_MODE=debug 
       - JWT_SECRET=jwt_rahasia
     
+    volumes:
+      # Format: [HOST_PATH]:[CONTAINER_PATH]
+      - ./uploaded_data:/app/uploads
+      
     # Agar container restart otomatis jika terjadi crash
     restart: unless-stopped
