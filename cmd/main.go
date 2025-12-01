@@ -46,16 +46,17 @@ func main() {
 
 	// 3. Auto Migration
 	err := db.AutoMigrate(
+		&model.User{},
 		&model.Category{}, 
 		&model.Article{},
-		&model.User{},
+		&model.File{},
 	)
 	if err != nil {
 		log.Fatal("Migration failed:", err)
 	}
 
 	// 4. Setup Layer (Dependency Injection)
-	// SETUP USER/AUTH MODULE
+	// -- User Module --
     userRepo := repository.NewUserRepository(db)
 	userService := service.NewUserService(userRepo)
     authHandler := handler.NewAuthHandler(userService)
@@ -70,6 +71,11 @@ func main() {
 	// Perhatikan: ArticleService butuh catRepo juga untuk validasi
 	articleService := service.NewArticleService(articleRepo, catRepo) 
 	articleHandler := handler.NewArticleHandler(articleService)
+
+	// -- Category Module --
+	fileRepo := repository.NewFileRepository(db)
+	fileService := service.NewFileService(fileRepo)
+	fileHandler := handler.FileHandler{FileService: fileService}
 
 	// Note: Anda perlu mengimplementasikan repo/service/handler untuk Article 
 	// dengan pola yang sama persis seperti Category di atas.
@@ -114,6 +120,12 @@ func main() {
         // Buat Grup baru dan terapkan AuthMiddleware
         protected := api.Group("/", middleware.AuthMiddleware())
         {
+			files := protected.Group("/files")
+			{
+				// Endpoint untuk upload file
+				files.POST("/upload", fileHandler.UploadFileHandler)
+			}
+
 			categories := protected.Group("/categories")
 			{
 				categories.GET("/", catHandler.GetAll)
@@ -122,7 +134,6 @@ func main() {
 				categories.DELETE("/:id", catHandler.Delete)
 			}
 			
-			// Routes Article
 			articles := protected.Group("/articles")
 			{
 				articles.GET("/", articleHandler.GetAll)
