@@ -8,6 +8,8 @@ import (
 	"path/filepath"
 	"strings"
 	"time"
+
+	"gorm.io/gorm"
 )
 
 const maxFileSize = 500 * 1024 // 500 KB
@@ -16,17 +18,17 @@ const uploadDir = "./uploads"   // Direktori penyimpanan file fisik
 type FileService interface {
 	// PrepareFile: Hanya melakukan validasi dan membuat model file (tanpa menyimpan ke DB)
 	PrepareFile(fileHeader *multipart.FileHeader) (*model.File, error)
-	
 	// SaveMetadata: Tugas tunggal untuk menyimpan model yang sudah lengkap ke DB
 	SaveMetadata(fileRecord *model.File) error 
+	GetFileRecord(id string) (*model.File, error)
 }
 
 type fileService struct {
-	Repo repository.FileRepository
+	repo repository.FileRepository
 }
 
 func NewFileService(repo repository.FileRepository) FileService {
-	return &fileService{Repo: repo}
+	return &fileService{repo}
 }
 
 // PrepareFile: Logika Validasi dan Penamaan File
@@ -66,5 +68,17 @@ func (s *fileService) PrepareFile(fileHeader *multipart.FileHeader) (*model.File
 // SaveMetadata: Tugas tunggal untuk menyimpan metadata file
 func (s *fileService) SaveMetadata(fileRecord *model.File) error {
     // Panggil Repository untuk menyimpan ke DB
-	return s.Repo.Create(fileRecord)
+	return s.repo.Create(fileRecord)
+}
+
+func (s *fileService) GetFileRecord(id string) (*model.File, error) {
+	// Panggil Repository
+	file, err := s.repo.GetByID(id) 
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, errors.New("file not found")
+		}
+		return nil, errors.New("failed to retrieve file data: " + err.Error())
+	}
+	return file, nil
 }

@@ -3,6 +3,7 @@ package handler
 import (
 	"bejalar-dasar/internal/service"
 	"bejalar-dasar/pkg/response"
+	"fmt"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -61,4 +62,48 @@ func (h *FileHandler) UploadFileHandler(c *gin.Context) {
 
 	// 6. Response Sukses (Handler Responsibility)
 	response.Success(c, http.StatusOK, "File uploaded successfully", nil)
+}
+
+func (h *FileHandler) DownloadFileHandler(c *gin.Context) {
+	// 1. Ambil File ID dari URL parameter
+	id := c.Param("id")
+    
+	// 2. Panggil Service untuk mendapatkan metadata
+	fileRecord, err := h.FileService.GetFileRecord(id)
+	if err != nil {
+		// Error sudah dihandle oleh service, termasuk RecordNotFound
+		// c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		response.Error(c, http.StatusNotFound, "File not found", err.Error())
+		return
+	}
+
+	// 3. Tentukan Path File Fisik
+	// Catatan: fileRecord.Filepath adalah path di dalam container (misalnya /app/uploads/unique_name.jpg)
+	filePath := fileRecord.Filepath
+	
+    // 4. Set Content Type (Penting!)
+    // Ini memberi tahu browser cara menampilkan file (display/download)
+	contentType := ""
+	switch fileRecord.Filetype {
+	case "image":
+		// Gin secara otomatis akan mencoba menebak tipe MIME berdasarkan ekstensi
+		contentType = "image/" + filepath.Ext(fileRecord.Filename)[1:] // contoh: image/jpeg
+	case "pdf":
+		contentType = "application/pdf"
+	default:
+		contentType = "application/octet-stream" // Default untuk download paksa
+	}
+    
+    // 5. Streaming File
+    // Gin menyediakan helper yang aman untuk melayani file
+    // Content-Disposition: 'inline' akan mencoba menampilkan file di browser (seperti gambar dan PDF).
+    // Jika ingin download paksa, gunakan 'attachment; filename='
+    
+    c.Header("Content-Type", contentType)
+    c.Header("Content-Disposition", fmt.Sprintf("inline; filename=%s", fileRecord.Filename))
+    
+    // Perintah Gin untuk menyajikan file yang tersimpan di disk
+    c.File(filePath)
+    
+    
 }

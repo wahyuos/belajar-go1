@@ -124,6 +124,7 @@ func main() {
 			{
 				// Endpoint untuk upload file
 				files.POST("/upload", fileHandler.UploadFileHandler)
+				files.GET("/:id", fileHandler.DownloadFileHandler)
 			}
 
 			categories := protected.Group("/categories")
