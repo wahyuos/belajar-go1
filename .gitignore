@@ -3,6 +3,7 @@
 # -------------------------------------
 # Vendor directory (jika Anda menggunakan vendoring)
 vendor/
+uploads/
 
 # -------------------------------------
 # 2. OUTPUT KOMPILASI DAN EXECUTABLE
