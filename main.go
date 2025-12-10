@@ -28,6 +28,17 @@ func main() {
 	// 2. Connect DB
 	db := database.GetDatabaseConnection()
 
+	// 3. Auto Migration
+	err := db.AutoMigrate(
+		&model.User{},
+		&model.Category{}, 
+		&model.Article{},
+		&model.File{},
+	)
+	if err != nil {
+		log.Fatal("Migration failed:", err)
+	}
+
 	// buat user login
 	// Hash Password
 	hashedPassword, _ := bcrypt.GenerateFromPassword([]byte("password123"), bcrypt.DefaultCost)
@@ -43,17 +54,6 @@ func main() {
 
 	// Simpan ke database (akan otomatis di-hash)
 	db.FirstOrCreate(&user, model.User{Username: "admin"})
-
-	// 3. Auto Migration
-	err := db.AutoMigrate(
-		&model.User{},
-		&model.Category{}, 
-		&model.Article{},
-		&model.File{},
-	)
-	if err != nil {
-		log.Fatal("Migration failed:", err)
-	}
 
 	// 4. Setup Layer (Dependency Injection)
 	// -- User Module --
