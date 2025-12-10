@@ -27,7 +27,8 @@ main
 # File konfigurasi yang mungkin menyimpan kredensial
 config.yml
 config.yaml
-
+Dockerfile
+docker-compose.yml
 # -------------------------------------
 # 4. TESTING DAN LOGGING
 # -------------------------------------
