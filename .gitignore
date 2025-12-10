@@ -22,7 +22,7 @@ main
 # 3. KONFIGURASI DAN RAHASIA (SENSITIF)
 # -------------------------------------
 # FILE ENVIRONMENT (WAJIB DIHINDARI!)
-.env 
+# .env 
 .env.*
 # File konfigurasi yang mungkin menyimpan kredensial
 config.yml
