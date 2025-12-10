@@ -27,10 +27,22 @@ services:
       # Variable aplikasi
       - GIN_MODE=debug 
       - JWT_SECRET=jwt_rahasia
-    
+
+    container_name: blog_app_container
+
     volumes:
       # Format: [HOST_PATH]:[CONTAINER_PATH]
       - ./uploaded_data:/app/uploads
       
     # Agar container restart otomatis jika terjadi crash
     restart: unless-stopped
+
+    networks:
+      - default # Jaringan internal Compose
+      - gateway_network # <-- Tambahkan jaringan eksternal
+  
+networks:
+  gateway_network: # <-- Definisikan jaringan eksternal
+    external: true
+  default:
+    driver: bridge # Jaringan internal default Compose
